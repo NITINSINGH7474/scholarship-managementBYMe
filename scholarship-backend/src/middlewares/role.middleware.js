@@ -1,11 +1,21 @@
-// src/middlewares/role.middleware.js
-function roleMiddleware(allowed = []) {
+function permit(allowedRoles = []) {
   return (req, res, next) => {
-    const role = req.userRole || (req.user && req.user.role);
-    if (!role) return res.status(403).json({ success: false, message: 'Role missing' });
-    if (!allowed.includes(role)) return res.status(403).json({ success: false, message: 'Forbidden' });
+    const role = req.userRole; // set by auth.middleware.js
+
+    if (!role) {
+      return res
+        .status(403)
+        .json({ success: false, message: "User role not found" });
+    }
+
+    if (!allowedRoles.includes(role)) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Forbidden: insufficient role" });
+    }
+
     next();
   };
 }
 
-module.exports = { roleMiddleware };
+module.exports = { permit };
