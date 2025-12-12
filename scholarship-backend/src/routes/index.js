@@ -5,6 +5,8 @@ const authRoutes = require('./auth.routes');
 const profileRoutes = require('./profile.routes')
 const scholarshipRoutes = require('./scholarship.routes')
 
+router.use('/', require('./application.routes'));
+
 router.use('/auth', authRoutes);
 
 router.use('/profile', profileRoutes);

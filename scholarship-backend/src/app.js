@@ -39,6 +39,10 @@ app.get("/", (req, res) => {
 
 app.use('/api', routes);
 
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/uploads', express.static(storage.UPLOAD_DIR));
+}
+
 // Health Check
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK", uptime: process.uptime() });
