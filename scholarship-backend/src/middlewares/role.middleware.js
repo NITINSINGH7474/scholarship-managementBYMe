@@ -1,6 +1,6 @@
 function permit(allowedRoles = []) {
   return (req, res, next) => {
-    const role = req.userRole; // set by auth.middleware.js
+    const role = req.userRole;
 
     if (!role) {
       return res
@@ -16,6 +16,6 @@ function permit(allowedRoles = []) {
 
     next();
   };
-}
+};
 
 module.exports = { permit };

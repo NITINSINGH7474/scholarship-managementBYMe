@@ -1,15 +1,16 @@
-const express = require('express');
+// src/routes/index.js
+const express = require("express");
 const router = express.Router();
 
-const authRoutes = require('./auth.routes');
-const profileRoutes = require('./profile.routes')
-const scholarshipRoutes = require('./scholarship.routes')
+const authRoutes = require("./auth.routes");
+const profileRoutes = require("./profile.routes");
+const scholarshipRoutes = require("./scholarship.routes");
+const applicationRoutes = require("./application.routes");
 
-router.use('/', require('./application.routes'));
+router.use("/auth", authRoutes);
+router.use("/profile", profileRoutes);
+router.use("/scholarships", scholarshipRoutes);
 
-router.use('/auth', authRoutes);
-
-router.use('/profile', profileRoutes);
-router.use('/scholarships', scholarshipRoutes);
+router.use("/", applicationRoutes);
 
 module.exports = router;
