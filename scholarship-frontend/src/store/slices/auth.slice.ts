@@ -5,6 +5,8 @@ export interface User {
   _id: string;
   email: string;
   role: "APPLICANT" | "ADMIN" | "SUPER_ADMIN";
+  avatar?: string;
+  name?: string;
 }
 
 interface AuthState {
@@ -27,14 +29,15 @@ const initialState: AuthState = {
 
 export const signup = createAsyncThunk<
   void,
-  { email: string; password: string },
+  { email: string; password: string; name: string; role: "APPLICANT" | "ADMIN" },
   { rejectValue: string }
 >("auth/signup", async (payload, { rejectWithValue }) => {
   try {
     await signupApi(payload);
   } catch (err: any) {
+    console.error("Signup Error Details:", err.response?.data || err.message);
     return rejectWithValue(
-      err.response?.data?.message || "Signup failed"
+      err.response?.data?.message || "Signup failed. Please try again."
     );
   }
 });
@@ -85,6 +88,12 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.isAuthenticated = true;
     },
+
+    updateUser(state, action) {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -119,5 +128,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, restoreSession } = authSlice.actions;
+export const { logout, restoreSession, updateUser } = authSlice.actions;
 export default authSlice.reducer;

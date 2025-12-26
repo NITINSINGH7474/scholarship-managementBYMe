@@ -22,6 +22,12 @@ async function createOrUpdateProfile(userId, payload) {
     { new: true, upsert: true, setDefaultsOnInsert: true }
   );
 
+  // Sync name to User model if provided
+  if (payload.extra && payload.extra.fullName) {
+    user.name = payload.extra.fullName;
+    await user.save();
+  }
+
   return profile;
 }
 

@@ -1,134 +1,102 @@
 "use client";
 
 import Link from "next/link";
-import { useAppSelector } from "@/src/store/hooks";
+import { useEffect, useState } from "react";
+import Button from "@/src/components/ui/Button";
+import api from "@/src/lib/api";
 
-export default function HomePage() {
-  const { isAuthenticated, user } = useAppSelector(
-    (state) => state.auth
-  );
-
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-indigo-50 to-white">
-      {/* NAVBAR */}
-      <header className="flex justify-between items-center px-10 py-6">
-        <h1 className="text-2xl font-bold text-indigo-600">
-          🎓 Scholarship Platform
-        </h1>
-
-        <nav className="space-x-4">
-          {!isAuthenticated && (
-            <>
-              <Link
-                href="/login"
-                className="px-4 py-2 rounded-md border border-indigo-600 text-indigo-600 hover:bg-indigo-50"
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
-              >
-                Sign Up
-              </Link>
-            </>
-          )}
-
-          {isAuthenticated && (
-            <Link
-              href={
-                user?.role === "ADMIN" || user?.role === "SUPER_ADMIN"
-                  ? "/admin"
-                  : "/dashboard"
-              }
-              className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
-            >
-              Dashboard
-            </Link>
-          )}
-        </nav>
-      </header>
-
-      {/* HERO */}
-      <section className="flex flex-col items-center justify-center text-center px-6 py-24">
-        <h2 className="text-5xl font-extrabold text-gray-900 max-w-4xl">
-          Apply for Scholarships. <br />
-          <span className="text-indigo-600">
-            Manage Applications Seamlessly.
-          </span>
-        </h2>
-
-        <p className="mt-6 text-lg text-gray-600 max-w-2xl">
-          A centralized platform for students to apply for scholarships
-          and for administrators to manage applications efficiently.
-        </p>
-
-        <div className="mt-10 flex gap-4">
-          {!isAuthenticated ? (
-            <>
-              <Link
-                href="/signup"
-                className="px-6 py-3 rounded-lg bg-indigo-600 text-white text-lg hover:bg-indigo-700"
-              >
-                Get Started
-              </Link>
-              <Link
-                href="/login"
-                className="px-6 py-3 rounded-lg border border-gray-300 text-lg hover:bg-gray-100"
-              >
-                Login
-              </Link>
-            </>
-          ) : (
-            <Link
-              href={
-                user?.role === "ADMIN" || user?.role === "SUPER_ADMIN"
-                  ? "/admin"
-                  : "/dashboard"
-              }
-              className="px-8 py-3 rounded-lg bg-indigo-600 text-white text-lg hover:bg-indigo-700"
-            >
-              Go to Dashboard
-            </Link>
-          )}
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section className="px-10 py-20 bg-white">
-        <h3 className="text-3xl font-bold text-center mb-12">
-          Why Use This Platform?
-        </h3>
-
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <Feature
-            title="Easy Applications"
-            desc="Apply to multiple scholarships with a simple and intuitive process."
-          />
-          <Feature
-            title="Document Uploads"
-            desc="Securely upload and manage all required documents."
-          />
-          <Feature
-            title="Admin Control"
-            desc="Admins can review, approve, and manage applications efficiently."
-          />
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="py-6 text-center text-gray-500">
-        © {new Date().getFullYear()} Scholarship Platform. All rights reserved.
-      </footer>
-    </main>
-  );
+interface Scholarship {
+  _id: string;
+  title: string;
+  description: string;
+  amount: number;
 }
 
-function Feature({ title, desc }: { title: string; desc: string }) {
+export default function Home() {
+  const [featured, setFeatured] = useState<Scholarship[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch random featured scholarships
+    api.get("/scholarships?limit=3")
+      .then(res => setFeatured(res.data.docs || []))
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <div className="p-6 rounded-xl border hover:shadow-md transition">
-      <h4 className="text-xl font-semibold mb-2">{title}</h4>
-      <p className="text-gray-600">{desc}</p>
+    <div className="min-h-screen pt-20 pb-10 px-6">
+      {/* Hero Section */}
+      <div className="max-w-6xl mx-auto text-center space-y-8 py-20">
+        <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 animate-in fade-in slide-in-from-bottom-5 duration-1000">
+          Unlock Your Future <br /> With The Right Scholarship
+        </h1>
+        <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          We bridge the gap between talent and opportunity. Explore thousands of scholarships tailored to your academic profile.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+          <Link href="/dashboard/scholarships">
+            <Button className="px-8 py-4 text-lg">
+              Find Scholarships
+            </Button>
+          </Link>
+          <Link href="/signup">
+            <Button variant="secondary" className="px-8 py-4 text-lg">
+              Create Account
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Featured Section */}
+      <div className="max-w-6xl mx-auto mt-20">
+        <h2 className="text-3xl font-bold text-white mb-8 border-l-4 border-indigo-500 pl-4">
+          Featured Opportunities
+        </h2>
+
+        {loading ? (
+          <div className="text-white text-center">Loading opportunities...</div>
+        ) : featured.length > 0 ? (
+          <div className="grid md:grid-cols-3 gap-6">
+            {featured.map((sch) => (
+              <div key={sch._id} className="glass p-6 rounded-2xl border border-white/10 hover:-translate-y-1 transition-transform duration-300">
+                <div className="h-12 w-12 rounded-lg bg-indigo-500/20 flex items-center justify-center mb-4 text-2xl">
+                  🎓
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">{sch.title}</h3>
+                <p className="text-gray-400 text-sm line-clamp-3 mb-4 h-15">
+                  {sch.description}
+                </p>
+                <div className="flex justify-between items-center border-t border-white/5 pt-4">
+                  <span className="text-indigo-300 font-bold">${sch.amount}</span>
+                  <Link href="/dashboard/scholarships">
+                    <span className="text-sm text-gray-400 hover:text-white transition-colors">View Details →</span>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-gray-400 text-center">Check back soon for new scholarships!</div>
+        )}
+      </div>
+
+      {/* Stats Section */}
+      <div className="max-w-6xl mx-auto mt-24 mb-12 grid md:grid-cols-3 gap-8 text-center glass p-10 rounded-3xl border border-white/5">
+        <div>
+          <h3 className="text-4xl font-bold text-white mb-2">$5M+</h3>
+          <p className="text-indigo-300">Scholarships Awarded</p>
+        </div>
+        <div>
+          <h3 className="text-4xl font-bold text-white mb-2">10k+</h3>
+          <p className="text-indigo-300">Active Students</p>
+        </div>
+        <div>
+          <h3 className="text-4xl font-bold text-white mb-2">98%</h3>
+          <p className="text-indigo-300">Success Rate</p>
+        </div>
+      </div>
     </div>
   );
 }

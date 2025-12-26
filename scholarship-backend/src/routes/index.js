@@ -7,7 +7,10 @@ const profileRoutes = require("./profile.routes");
 const scholarshipRoutes = require("./scholarship.routes");
 const applicationRoutes = require("./application.routes");
 
+const userRoutes = require("./user.routes");
+
 router.use("/auth", authRoutes);
+router.use("/users", userRoutes);
 router.use("/profile", profileRoutes);
 router.use("/scholarships", scholarshipRoutes);
 

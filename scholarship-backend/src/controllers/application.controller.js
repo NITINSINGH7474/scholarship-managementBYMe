@@ -71,6 +71,23 @@ async function getOne(req, res, next) {
   }
 }
 
+async function listMyApplications(req, res, next) {
+  try {
+    const userId = req.userId;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 20;
+
+    const data = await applicationService.listApplications({
+      page,
+      limit,
+      applicantId: userId // Filter by logged-in user
+    });
+    return res.json({ success: true, ...data });
+  } catch (err) {
+    return next(err);
+  }
+}
+
 async function list(req, res, next) {
   try {
     // only admin / reviewer should call this in practice (enforced by route)
@@ -165,12 +182,33 @@ async function downloadDocument(req, res, next) {
   }
 }
 
+async function updateStatus(req, res, next) {
+  try {
+    const applicationId = req.params.id;
+    const { status, remarks } = req.body;
+
+    // Authorization check
+    if (req.userRole !== 'ADMIN' && req.userRole !== 'SUPER_ADMIN') {
+      const e = new Error("Forbidden");
+      e.status = 403;
+      throw e;
+    }
+
+    const app = await applicationService.updateApplicationStatus(applicationId, status, remarks, req.userId);
+    return res.json({ success: true, application: app });
+  } catch (err) {
+    return next(err);
+  }
+}
+
 
 module.exports = {
   createOrUpdateDraft,
   submit,
   getOne,
   list,
+  listMyApplications,
   uploadDocument,
   downloadDocument,
+  updateStatus
 };

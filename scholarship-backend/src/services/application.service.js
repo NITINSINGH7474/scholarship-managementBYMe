@@ -87,9 +87,10 @@ async function getApplication(id) {
  * List applications (for admin/reviewer)
  * supports filters: scholarshipId, status, q (applicant email/name)
  */
-async function listApplications({ page = 1, limit = 20, scholarshipId, status, q }) {
+async function listApplications({ page = 1, limit = 20, scholarshipId, applicantId, status, q }) {
   const filter = {};
   if (scholarshipId) filter.scholarship = scholarshipId;
+  if (applicantId) filter.applicant = applicantId;
   if (status) filter.status = status;
   if (q) {
     // naive text search on applicant email/name via populate in pipeline would be better.
@@ -131,10 +132,31 @@ async function attachDocument(applicationId, docId, userId) {
   return app;
 }
 
+/**
+ * Update application status and remarks (Admin/Reviewer)
+ */
+async function updateApplicationStatus(applicationId, status, remarks, updaterId) {
+  const app = await Application.findById(applicationId);
+  if (!app) {
+    const e = new Error('Application not found');
+    e.status = 404;
+    throw e;
+  }
+
+  app.status = status;
+  if (remarks) {
+    app.remarks = remarks;
+  }
+
+  await app.save();
+  return app;
+}
+
 module.exports = {
   upsertDraft,
   submitApplication,
   getApplication,
   listApplications,
-  attachDocument
+  attachDocument,
+  updateApplicationStatus
 };

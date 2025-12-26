@@ -17,9 +17,9 @@ function toSeconds(str) {
   if (!match) return 60 * 60 * 24 * 30;
   const n = Number(match[1]), u = match[2];
   return u === 's' ? n :
-         u === 'm' ? n * 60 :
-         u === 'h' ? n * 3600 :
-         u === 'd' ? n * 86400 : n;
+    u === 'm' ? n * 60 :
+      u === 'h' ? n * 3600 :
+        u === 'd' ? n * 86400 : n;
 }
 
 async function register({ name, email, password, phone, role = 'APPLICANT' }, emailSender) {
@@ -30,7 +30,17 @@ async function register({ name, email, password, phone, role = 'APPLICANT' }, em
     throw e;
   }
 
-  const user = await User.create({ name, email, password, phone, role });
+  const isDev = process.env.EMAIL_DISABLED === 'true';
+  const finalRole = role || 'APPLICANT';
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phone,
+    role: finalRole,
+    emailVerified: isDev // Auto-verify in dev mode
+  });
 
   // generate unguessable email verification token (raw)
   const rawToken = crypto.randomBytes(32).toString('hex');
@@ -120,7 +130,7 @@ async function login({ email, password }, ip) {
   }
 
   // prevent login if email not verified
-  if (!user.emailVerified) {
+  if (!user.emailVerified && process.env.EMAIL_DISABLED !== 'true') {
     const err = new Error('Please verify your email before logging in');
     err.status = 403;
     throw err;
@@ -299,10 +309,10 @@ function parseLockDuration(str) {
   if (!match) return 15 * 60 * 1000;
   const n = Number(match[1]), u = match[2];
   return u === 's' ? n * 1000 :
-         u === 'm' ? n * 60 * 1000 :
-         u === 'h' ? n * 3600 * 1000 :
-         u === 'd' ? n * 86400 * 1000 :
-         n * 60 * 1000;
+    u === 'm' ? n * 60 * 1000 :
+      u === 'h' ? n * 3600 * 1000 :
+        u === 'd' ? n * 86400 * 1000 :
+          n * 60 * 1000;
 }
 
 module.exports = {

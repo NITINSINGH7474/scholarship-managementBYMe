@@ -9,9 +9,10 @@ const applicationSchema = new mongoose.Schema({
   submittedAt: { type: Date },
   status: {
     type: String,
-    enum: ['DRAFT','SUBMITTED','IN_REVIEW','SHORTLISTED','AWARDED','REJECTED','ARCHIVED'],
+    enum: ['DRAFT', 'SUBMITTED', 'IN_REVIEW', 'SHORTLISTED', 'AWARDED', 'REJECTED', 'ARCHIVED'],
     default: 'DRAFT'
   },
+  remarks: { type: String },
   score: { type: Number, default: 0 },
   reviewerAssignments: [{ reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, stage: String }],
   meta: { type: mongoose.Schema.Types.Mixed }

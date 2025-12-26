@@ -13,6 +13,8 @@ export const loginApi = async (payload: LoginPayload) => {
 export const signupApi = async (payload: {
   email: string;
   password: string;
+  name: string;
+  role: "APPLICANT" | "ADMIN";
 }) => {
   const res = await api.post("/auth/register", payload);
   return res.data;

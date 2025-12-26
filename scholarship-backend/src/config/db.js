@@ -11,8 +11,13 @@ module.exports.connect = async () => {
     throw new Error("MONGO_URI not found");
   }
 
-  await mongoose.connect(uri);
-  console.log("MongoDB connected");
+  try {
+    await mongoose.connect(uri);
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("❌ MongoDB Connection Error:", err.message);
+    // Don't crash immediately, let user see the error
+  }
 };
 
 module.exports.connectTest = async () => {

@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
 
   password: { type: String, required: true, select: false },
   role: { type: String, enum: ROLES, default: 'APPLICANT' },
+  avatar: { type: String }, // URL or path to avatar image
   phone: { type: String },
   isActive: { type: Boolean, default: true },
   emailVerified: { type: Boolean, default: false },
@@ -34,33 +35,33 @@ userSchema.pre('save', async function () {
 
 
 // Compare password
-userSchema.methods.comparePassword = function(candidate) {
+userSchema.methods.comparePassword = function (candidate) {
   return bcrypt.compare(candidate, this.password);
 };
 
 // Account lock helpers
-userSchema.methods.incFailedAttempts = function() {
+userSchema.methods.incFailedAttempts = function () {
   this.failedLoginAttempts += 1;
   return this.save();
 };
 
-userSchema.methods.resetFailedAttempts = function() {
+userSchema.methods.resetFailedAttempts = function () {
   this.failedLoginAttempts = 0;
   this.lockUntil = null;
   return this.save();
 };
 
-userSchema.methods.lockAccount = function(durationMs) {
+userSchema.methods.lockAccount = function (durationMs) {
   this.lockUntil = new Date(Date.now() + durationMs);
   return this.save();
 };
 
-userSchema.methods.isLocked = function() {
+userSchema.methods.isLocked = function () {
   return this.lockUntil && this.lockUntil > Date.now();
 };
 
 // Reset token generator
-userSchema.methods.generatePasswordReset = function() {
+userSchema.methods.generatePasswordReset = function () {
   const raw = crypto.randomBytes(32).toString('hex');
   this.resetPasswordToken = crypto.createHash('sha256').update(raw).digest('hex');
   this.resetPasswordExpires = Date.now() + 1000 * 60 * 60; // 1 hour
