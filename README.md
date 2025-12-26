@@ -303,37 +303,37 @@ Add screenshots in a screenshots/ folder and reference them like this:
 ## 📸 Screenshots
 
 ### Student Login
-![Student Login](StudentLogin.png)
+![Student Login](screenshots/StudentLogin.png)
 
 ### Student Signup
-![Student Signup](StudentSignUp.png)
+![Student Signup](screenshots/StudentSignUp.png)
 
 ### Student Dashboard
-![Dashboard](Dashboard.png)
+![Dashboard](screenshots/Dashboard.png)
 
 ### Dashboard Overview
-![Dashboard Overview](Dashboardovervuew.png)
+![Dashboard Overview](screenshots/Dashboardovervuew.png)
 
 ### Apply for Scholarship
-![Apply](Apply.png)
+![Apply](screenshots/Apply.png)
 
 ### Scholarship List
-![Scholarship](Scholarship.png)
+![Scholarship](screenshots/Scholarship.png)
 
 ### Application Status
-![Status](Status.png)
+![Status](screenshots/Status.png)
 
 ### Profile Page
-![Profile](Profile.png)
+![Profile](screenshots/Profile.png)
 
 ### Admin – Manage Scholarships
-![Manage Scholarship](ManageScholarship.png)
+![Manage Scholarship](screenshots/ManageScholarship.png)
 
 ### Admin – Accept / Reject Applications
-![Accept Reject](AcceptReject.png)
+![Accept Reject](screenshots/AcceptReject.png)
 
 ### Admin – Approve / Decline
-![Approve Decline](ApproveDecline.png)
+![Approve Decline](screenshots/ApproveDecline.png)
 
 
 🧪 Testing
