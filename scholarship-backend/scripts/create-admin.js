@@ -21,6 +21,7 @@ const createAdmin = async () => {
             console.log('Updated existing user to ADMIN role.');
         } else {
             const admin = await User.create({
+                name: 'Admin User',
                 email: adminEmail,
                 password: adminPassword,
                 role: 'ADMIN',

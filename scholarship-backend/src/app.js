@@ -12,6 +12,7 @@ const app = express();
 
 // ---- Minimal lifecycle logger ----
 app.use((req, res, next) => {
+  console.log(`[INCOMING] ${req.method} ${req.url} from ${req.ip}`);
   console.log('>>> REQ START:', req.method, req.path, 'headers:', {
     host: req.headers.host,
     origin: req.headers.origin,
@@ -54,6 +55,16 @@ app.use('/api', routes);
 // Health Check
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK", uptime: process.uptime() });
+});
+
+// Debug 404 handler (catch all unmatched routes)
+app.use((req, res, next) => {
+  console.log('!!! 404 CATCH-ALL HIT !!!');
+  console.log('Request URL:', req.originalUrl);
+  console.log('Request Method:', req.method);
+  const error = new Error(`Can't find ${req.originalUrl} on this server!`);
+  error.status = 404;
+  next(error);
 });
 
 // Global Error Handler

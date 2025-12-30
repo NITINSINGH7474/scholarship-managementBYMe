@@ -8,6 +8,13 @@ async function createOrUpdateDraft(req, res, next) {
     const scholarshipId = req.params.scholarshipId;
     const userId = req.userId;
     const payload = req.body;
+
+    if (!scholarshipId) {
+      const e = new Error("Scholarship ID is required");
+      e.status = 400;
+      throw e;
+    }
+
     const app = await applicationService.upsertDraft(
       scholarshipId,
       userId,

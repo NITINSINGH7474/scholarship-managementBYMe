@@ -35,9 +35,9 @@ export const signup = createAsyncThunk<
   try {
     await signupApi(payload);
   } catch (err: any) {
-    console.error("Signup Error Details:", err.response?.data || err.message);
+    console.error("Signup Error Details:", err);
     return rejectWithValue(
-      err.response?.data?.message || "Signup failed. Please try again."
+      err.response?.data?.message || `Signup failed: ${err.message || "Unknown error"}`
     );
   }
 });
@@ -61,8 +61,9 @@ export const login = createAsyncThunk<
       token: data.token,
     };
   } catch (err: any) {
+    console.error("Login Error Details:", err);
     return rejectWithValue(
-      err.response?.data?.message || "Login failed"
+      err.response?.data?.message || `Login failed: ${err.message || "Unknown error"}`
     );
   }
 });

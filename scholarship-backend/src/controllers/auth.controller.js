@@ -41,6 +41,7 @@ async function verifyEmail(req, res, next) {
 
 async function login(req, res, next) {
   try {
+    console.log('Login attempt:', { ...req.body, password: '***' }); // Log attempt
     const data = await authService.login(req.body, req.ip);
     // adapt response to include `token` for tests as well as access/refresh
     return res.json({
@@ -51,6 +52,7 @@ async function login(req, res, next) {
       user: data.user
     });
   } catch (err) {
+    console.error('Login service error:', err.message); // Log service error
     return next(err);
   }
 }
