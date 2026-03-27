@@ -15,8 +15,12 @@ module.exports.connect = async () => {
     await mongoose.connect(uri);
     console.log("MongoDB connected");
   } catch (err) {
-    console.error("❌ MongoDB Connection Error:", err.message);
-    // Don't crash immediately, let user see the error
+    console.error(" MongoDB Connection Error:", err.message);
+    console.log("⚠️ Falling back to in-memory MongoDB...");
+    mongoServer = await MongoMemoryServer.create();
+    const testUri = mongoServer.getUri();
+    await mongoose.connect(testUri);
+    console.log("✅ In-memory MongoDB connected");
   }
 };
 
