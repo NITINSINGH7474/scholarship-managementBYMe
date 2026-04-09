@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongodb:
     image: mongo:latest
@@ -25,6 +23,8 @@ services:
     restart: always
     ports:
       - "5000:5000"
+    env_file:
+      - ./scholarship-backend/.env
     environment:
       - MONGO_URI=mongodb://mongodb:27017/scholarship-db
       - REDIS_URL=redis://redis:6379
