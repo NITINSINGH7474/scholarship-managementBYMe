@@ -303,22 +303,28 @@ The application will automatically create the database and collections on first 
 
 ## 🐳 Docker Support
 
-For easier setup, you can use Docker Compose to run MongoDB and Redis:
+For a completely unified setup, you can use Docker Compose to build and run the entire application stack (Frontend, Backend, MongoDB, and Redis) all at once.
+
+### Run the Complete Stack
 
 ```bash
-# Start MongoDB and Redis containers
-docker-compose up -d
+# Build and start all containers in the background
+docker compose up -d --build
 
-# Stop containers
-docker-compose down
+# Stop all containers
+docker compose down
 
-# View logs
-docker-compose logs -f
+# View logs for all services
+docker compose logs -f
 ```
 
-The `docker-compose.yml` includes:
-- **MongoDB**: Available on port 27017
-- **Redis**: Available on port 6379
+### Docker Services & Ports
+
+The `docker-compose.yml` configures the following services:
+- **Frontend App**: Available on `http://localhost:3051` (Mapped to 3051 to avoid Windows Hyper-V port reservation conflicts on port 3000)
+- **Backend API**: Available on `http://localhost:5000`
+- **MongoDB**: Available on port `27017`
+- **Redis**: Available on port `6379`
 
 ---
 
