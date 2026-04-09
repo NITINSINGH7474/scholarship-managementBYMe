@@ -6,7 +6,7 @@ import { logout } from "@/src/store/slices/auth.slice";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "./ui/ThemeToggle";
 
-const API_URL = "http://localhost:5000"; // Fallback if env not set
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export default function Navbar() {
   const { isAuthenticated, user } = useAppSelector((s) => s.auth);

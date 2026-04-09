@@ -17,5 +17,35 @@ services:
     ports:
       - "6379:6379"
 
+  backend:
+    build:
+      context: ./scholarship-backend
+      dockerfile: Dockerfile
+    container_name: scholarship_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/scholarship-db
+      - REDIS_URL=redis://redis:6379
+      - FRONTEND_URL=http://localhost:3051
+      - PORT=5000
+    depends_on:
+      - mongodb
+      - redis
+
+  frontend:
+    build:
+      context: ./scholarship-frontend
+      dockerfile: Dockerfile
+    container_name: scholarship_frontend
+    restart: always
+    ports:
+      - "3051:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api
+    depends_on:
+      - backend
+
 volumes:
   mongo_data:

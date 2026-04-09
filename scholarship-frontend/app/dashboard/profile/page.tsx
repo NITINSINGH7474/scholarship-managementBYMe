@@ -116,7 +116,7 @@ export default function ProfilePage() {
             <div className="flex flex-col items-center gap-4 bg-white/5 p-6 rounded-xl border border-white/10">
                 <div className="relative group cursor-pointer w-24 h-24">
                     <img
-                        src={formData.avatar ? (`http://localhost:5000${formData.avatar}`) : `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.fullName || "User")}`}
+                        src={formData.avatar ? (`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}${formData.avatar}`) : `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.fullName || "User")}`}
                         alt="Profile"
                         className="w-24 h-24 rounded-full object-cover border-2 border-indigo-500/50 group-hover:border-indigo-500 transition-all"
                     />

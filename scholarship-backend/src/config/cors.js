@@ -1,7 +1,7 @@
 const cors = require("cors");
 
 const corsOptions = {
-  origin: true, // Allow all origins in development
+  origin: process.env.FRONTEND_URL || true, // Allow specific origin in prod, all in dev
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
